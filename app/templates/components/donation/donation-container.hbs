@@ -11,17 +11,29 @@
   </p>
 </div>
 
-{{#if card}}
+{{#if (and card (not isProcessing))}}
   {{donation/card-item card=card}}
 {{else}}
-  {{#donation/credit-card isBusy=isBusy submit=(action saveAndDonate)}}
+  {{#donation/credit-card isProcessing=isProcessing submit=(action saveAndDonate)}}
     {{!show errors}}
     {{yield}}
   {{/donation/credit-card}}
 {{/if}}
 
 {{#if card}}
-  <button class="button {{unless isBusy "default"}} large donate" {{action donate}} disabled={{isBusy}}>Donate</button>
+  <button
+    {{action donate}}
+    class="button {{unless isProcessing "default"}} large donate"
+    disabled={{isProcessing}}
+    data-test-selector="donate button">
+
+    {{#if isProcessing}}
+      Processing...
+    {{else}}
+      Donate
+    {{/if}}
+  </button>
+
   {{!show errors}}
   {{yield}}
 {{/if}}

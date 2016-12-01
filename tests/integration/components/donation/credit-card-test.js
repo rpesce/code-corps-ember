@@ -57,7 +57,7 @@ test('it sends submit with credit card fields when button is clicked', function(
   page.clickSubmit();
 });
 
-test('it renders button as disabled and "Processing" when busy', function(assert) {
+test('it renders button as disabled and "Processing" when processing', function(assert) {
   assert.expect(2);
 
   stubService(this, 'stripe', {
@@ -68,7 +68,7 @@ test('it renders button as disabled and "Processing" when busy', function(assert
     }
   });
 
-  page.render(hbs`{{donation/credit-card isBusy=true submit=submitHandler}}`);
+  page.render(hbs`{{donation/credit-card isProcessing=true submit=submitHandler}}`);
 
   assert.ok(page.submitDisabled, 'Submit button is disabled');
   assert.equal(page.submitButtonText, 'Processing...', 'Submit button changed text');
@@ -89,4 +89,13 @@ test('it renders button as disabled and "Donate" when card is invalid', function
 
   assert.ok(page.submitDisabled, 'Submit button is disabled');
   assert.equal(page.submitButtonText, 'Donate', 'Submit button changed text');
+});
+
+test('it does not render sumbit button when hasCard is true', function(assert) {
+  assert.expect(1);
+
+  this.set('hasCard', true);
+  page.render(hbs`{{donation/credit-card hasCard=hasCard}}`);
+
+  assert.notOk(page.submitButtonIsVisible, 'Submit button is not visible');
 });

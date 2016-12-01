@@ -46,6 +46,27 @@ test('it renders new card form when there is no card to begin with', function(as
   assert.notOk(page.cards(0).isVisible, 'The card item is not visible.');
 });
 
+test('it renders new card form if there is a card and the form is processing', function(assert) {
+  assert.expect(4);
+
+  this.set('card', visa);
+  this.set('isProcessing', true);
+
+  page.render(hbs`
+    {{donation/donation-container
+      card=card
+      donate=donateHandler
+      isProcessing=isProcessing
+      saveAndDonate=saveAndDonateHandler
+    }}
+  `);
+
+  assert.ok(page.cardFormIsVisible, 'The new card form is rendered automatically.');
+  assert.ok(page.donationButtonIsVisible, 'Donation button is rendered.');
+  assert.notOk(page.creditCard.submitButtonIsVisible, 'Card form button is not rendered.');
+  assert.notOk(page.cards(0).isVisible, 'The card item is not visible.');
+});
+
 test('it renders the card item and the "donate" button when a card exists', function(assert) {
   assert.expect(3);
 
