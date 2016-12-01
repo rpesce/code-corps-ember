@@ -86,7 +86,7 @@ test('It requires authentication', function(assert) {
 });
 
 test('Allows creating a card and donating (creating a subscription)', function(assert) {
-  assert.expect(8);
+  assert.expect(9);
 
   stubStripe(this, stripeMockSuccess);
 
@@ -110,6 +110,10 @@ test('Allows creating a card and donating (creating a subscription)', function(a
   });
 
   andThen(() => {
+    server.get('/projects/:id', function() {
+      assert.ok(true, 'Project got reloaded');
+      return project;
+    });
     projectDonatePage.creditCard.clickSubmit();
   });
 
